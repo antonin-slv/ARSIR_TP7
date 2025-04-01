@@ -9,14 +9,22 @@ def euclid(a,b):
         (pgcd, u, v) = euclid(b, a % b)
         return (pgcd, v, u - (a // b) * v)
 
+def exp(a,b,n):
+    # calcule a^b mod n (en log(n) multiplications)
+    p = 1
+    while b > 0:
+        if b % 2 != 0:
+            p = (p * a) % n
+        a = (a * a) % n
+        b = b // 2
+    return p
+    
 
 def inv(a,n):
     # renvoie l'inverse de a modulo n, ou une erreur si a n'est pas inversible
-    return 0
-
-def sieve(n):
-    # calcule la liste des nombres premiers entre 1 et n
-    return []
+    (pgcd,u,v) = euclid(a,n)
+    if (pgcd != 1) : raise ValueError("A ins't inversible")
+    return u
 
 def is_prime(n):
     # teste si n est premier de manière certaine
@@ -30,17 +38,18 @@ def is_prime_fermat(n):
     # tout ceux pour qui c'est faux ne sont pas premiers
     # pour les autres, il faut tester
     return (exp(2, n - 1, n) == 1)
-    
-def exp(a,b,n):
-    # calcule a^b mod n (en log(n) multiplications)
-    p = 1
-    while b > 0:
-        if b % 2 != 0:
-            p = (p * a) % n
-        a = (a * a) % n
-        b = b // 2
-    return p
-    
+
+def sieve(n):
+    # calcule la liste des nombres premiers entre 1 et n
+    liste = []
+    if (n>=2) : 
+        liste.append(2)
+    for i in range(3,n+1,2) :
+        if is_prime_fermat(i):
+            if is_prime(i) :
+                liste.append(i)    
+    return liste
+
 def div(n):
     # renvoie la liste des diviseurs premiers de n
     if n == 1:
