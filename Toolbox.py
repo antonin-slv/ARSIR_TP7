@@ -86,7 +86,7 @@ def read_prime_from_file(filePath) :
 def get5Mprimes() :
     fileName = "primesNumber"
     try :
-        file = open(fileName,'r')
+        file = open(fileName,'rb')
     except :
         savePrimetoFile(5000000,fileName)
         file = open(fileName,'rb')

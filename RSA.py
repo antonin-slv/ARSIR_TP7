@@ -54,7 +54,7 @@ def test() :
 def text_to_int(text:str) :
     somme = 0
     mult = 1
-    for code in text.encode('ascii'):
+    for code in text.encode('ascii',"replace",):
         somme += mult * code
         mult *= 0xff
     return somme
