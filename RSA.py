@@ -50,3 +50,20 @@ def test() :
 
     decrypte = RSA_decode(priv[1],pub[0],encrypte)
     print(decrypte)
+
+def text_to_int(text:str) :
+    somme = 0
+    mult = 1
+    for code in text.encode('ascii'):
+        somme += mult * code
+        mult *= 0xff
+    return somme
+
+def int_to_text(number:int) :
+    text = ""
+    while number > 0 :
+        reste = number % 0xff
+        number -= reste
+        number //= 0xff
+        text =  text + chr(reste)
+    return text
