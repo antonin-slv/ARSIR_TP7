@@ -24,7 +24,7 @@ def inv(a,n):
     # renvoie l'inverse de a modulo n, ou une erreur si a n'est pas inversible
     (pgcd,u,v) = euclid(a,n)
     if (pgcd != 1) : raise ValueError("A ins't inversible")
-    return u
+    return u if u >= 0 else u + n
 
 def is_prime(n):
     # teste si n est premier de manière certaine
@@ -73,3 +73,22 @@ def gen(n):
         g = random.randint(1,n-1)
         cond = any([exp(g,(n-1)/d,n) == 1 for d in divs])
     return g
+
+import numpy as np
+def savePrimetoFile(n,fileName="primesNumber") :
+    file = open(fileName,'wb')
+    np.save(file,sieve(n))
+
+def read_prime_from_file(filePath) : 
+    file = open(filePath,"rb")
+    return np.load(file)
+
+def get5Mprimes() :
+    fileName = "primesNumber"
+    try :
+        file = open(fileName,'r')
+    except :
+        savePrimetoFile(5000000,fileName)
+        file = open(fileName,'rb')
+    return np.load(file).tolist()
+    
