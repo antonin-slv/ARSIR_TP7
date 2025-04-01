@@ -1,10 +1,11 @@
 import threading
 import socket as sckt
+import Toolbox
 
-def bertrand(port):
-  def bertrand_behavior(port):
-    # Bertrand choisit `b` sa clé privée
-    b = 0
+def bertrand(port,g,p,b):
+  def bertrand_behavior(port,g,p,b):
+
+    # Bertrand choisit `b` sa clé privée ( dans les parametres)
 
     socket = sckt.socket(sckt.AF_INET, sckt.SOCK_STREAM)
     socket.bind(("127.0.0.1", port))
@@ -22,12 +23,12 @@ def bertrand(port):
     print("Bertrand : Received {} from {}".format(ga, addr[1]))
     
     # Bertrand envoie à Arielle
-    gb = 0
+    gb = Toolbox.exp(g,b,p)
     print("Bertrand : Sending {} to {}".format(gb, addr[1]))
     conn.send(str(gb).encode())
 
     # Bertrand détermine la clé commune
-    gab = 0
+    gab = Toolbox.exp(ga,b,p)
     print("Bertrand : calculated key : {}".format(gab))
     conn.close()
     print("Bertrand : Closing the connection from {} at {}".format(addr[0], addr[1]))
@@ -36,14 +37,13 @@ def bertrand(port):
     socket.close()
     print("Bertrand : Disconnected")
     
-  x = threading.Thread(target=bertrand_behavior, args=([port]))
+  x = threading.Thread(target=bertrand_behavior, args=([port,g,p,b]))
   x.start()
 
   
 
-def arielle(port):
-  # Arielle choisit `a` sa clé privée
-  a = 0
+def arielle(port,g,p,a):
+  # Arielle choisit `a` sa clé privée (dans les parametres)
 
   socket = sckt.socket(sckt.AF_INET, sckt.SOCK_STREAM)
   try :
@@ -56,7 +56,7 @@ def arielle(port):
   
 
   # Arielle envoie à Bertrand
-  ga = 0
+  ga = Toolbox.exp(g,a,p)
   print("Arielle : Sending {} to {}".format(ga, port))
   socket.send(str(ga).encode())
 
@@ -65,7 +65,7 @@ def arielle(port):
   print("Arielle : Received {} from {}".format(gb, port))
 
   # Arielle détermine la clé commune
-  gab = 0
+  gab = Toolbox.exp(gb,a,p)
   print("Arielle : calculated key : {}".format(gab))
 
   # Déconnexion du client
